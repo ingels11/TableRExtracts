@@ -1,0 +1,73 @@
+---
+title: "TableRExtracts Introduction"
+author: "Justin Ingels"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(TableRExtracts)
+library(dplyr)
+library(magrittr)
+```
+
+# 1 Introduction
+
+The TableRExtracts package is useful for creating table extracts and codebooks
+for datasets within R. Table extracts are created as comma-separated value (.csv)
+files that provide summary statistics for variables in the dataset. The
+benefit of creating extracts is that they can populate tables created in Excel
+with dynamic links between the table and the extract (both sheets in Excel).
+If something changes with the dataset and the summary statistics need to be 
+updated, the table extract can be rerun and replaced in the Excel file and the 
+tables will automatically be updated.
+
+This vignette provides an overview for the extract process:
+1. Add labels to the variables and values in the dataset
+1. Determine the summary statistics of interest
+1. Create table extracts
+1. Set-up dynamically loaded tables in Excel
+1. Copy the extract to the Excel file
+
+# 2 Add Labels
+
+## 2.1 Introduction
+
+We will begin by creating labels for the variables and values in this dataset. 
+It is possible to add variable labels one variable at a time. The same is true
+of values and value labels which can be added one variable at a time or 
+to multiple variables in a single command.
+
+## 2.1.1 Prerequisites
+
+This section will focus on adding labels to the college_grads dataset provided
+as part of the TableRExtracts package.
+
+## 2.2.2 college_grads
+
+To explore adding labels to variables and values, we'll use college_grads. This
+data frame contains 173 observations corresponding to 173 different majors.
+The author of the <fivethirtyeight.com> article, "The Economic Guide to Picking
+A College Major" created the dataset using data from the American Community
+Survey 2010-2012 Public Use Microdata Series. MOre documentation can be found
+in ?college_grads.
+
+```{r}
+college_grads
+```
+
+```{r}
+AddVarLabels(college_grads) <- c("Total" = "Total number of people with major",
+                                 "Men" = "Male graduates",
+                                 "Women" = "Female graduates")
+```
+
+
