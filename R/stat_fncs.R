@@ -11,7 +11,7 @@ q1 <- function(x, na.rm = TRUE) {
   if (sum(is.na(x)) > 0 & !na.rm) {
     return(NA)
   } else {
-    return(quantile(x, na.rm = na.rm)[[2]])
+    return(stats::quantile(x, na.rm = na.rm)[[2]])
   }
 }
 
@@ -28,7 +28,7 @@ q3 <- function(x, na.rm = TRUE) {
   if (sum(is.na(x)) > 0 & !na.rm) {
     return(NA)
   } else {
-    return(quantile(x, na.rm = na.rm)[[4]])
+    return(stats::quantile(x, na.rm = na.rm)[[4]])
   }
 }
 
@@ -49,17 +49,18 @@ length_nona <- function(x, na.rm = TRUE) {
 
 #' Apply a Function to an Array, For Extract Creation
 #'
-#' @param x a tibble
+#' @param df a tibble
 #' @param index variable name in x to apply the specified function
 #' @param margin variable name in x to stratify data in index
 #' @param tab.max for a given extract, largest number of unique stratiying values
-#' @param fun the function to be applied
+#' @param fnc the function to be applied
 #' @param ... optional arguments to fun
 #' @return An array including results of function specified as fun, on variable
 #'   specified as index, stratified by margin, first element is for entire
 #'   array, remaining elements are for stratified
 #' @examples
 #' create_data_tab(nycflights13::flights, "air_time", "origin", 3, mean)
+#' @export
 create_data_tab <- function(df, index, margin, tab.max, fnc, ...) {
 
   # df must be a tibble

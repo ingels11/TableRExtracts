@@ -1,8 +1,6 @@
 #' Create a properly formatted date and time string
 #'
 #' @return The current date and time
-#' @examples
-#' GetDateTime()
 GetDateTime <- function() {
   Sys.setenv(TZ = "America/New_York")
   return(c(paste(Sys.Date()),

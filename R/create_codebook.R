@@ -2,6 +2,10 @@
 #'
 #' Create a codebook for a dataset including XXX for all variables.
 #'
+#' @param df dataframe object to create codebook
+#' @param df_file_name name codebook should be saved under
+#' @param df_title title printed on first page of codebook
+#'
 #' @export
 CreateCodebook <- function(df, df_file_name, df_title) {
 
@@ -16,8 +20,8 @@ CreateCodebook <- function(df, df_file_name, df_title) {
                            summaries = dataMaid::setSummaries(character = dataMaid::defaultCharacterSummaries(),
                                                               factor = dataMaid::defaultFactorSummaries(),
                                                               labelled = dataMaid::defaultLabelledSummaries(),
-                                                              numeric = dataMaid::defaultNumericSummaries(add = "meanSummary"),
-                                                              integer = dataMaid::defaultIntegerSummaries(add = "meanSummary"),
+                                                              numeric = dataMaid::defaultNumericSummaries(add = c("meanSummary", "pctZeroes")),
+                                                              integer = dataMaid::defaultIntegerSummaries(add = c("meanSummary", "pctZeroes")),
                                                               logical = dataMaid::defaultLogicalSummaries(),
                                                               Date = dataMaid::defaultDateSummaries()))
 }

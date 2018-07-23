@@ -1,6 +1,7 @@
-#' Create codebooks for datasets marked up by the TableRExtracts package
+#' Functions used to add a mean value to codebooks
 #'
-#' A set of functions that will help to create codebooks...
+#' A set of functions that will help to add the line of mean value
+#' to codebooks.
 #'
 #' @param v Vector of values in a dataset
 #' @param maxDecimals Maximum number of decimals to display (default = 2)
@@ -24,7 +25,7 @@ meanSummary.integer <- function(v, maxDecimals = 2) {
 
 meanSummaryHelper <- function(v, maxDecimals) {
   # remove missing observations
-  v <- na.omit(v)
+  v <- stats::na.omit(v)
 
   # compute mean and store "raw" output in `val`
   val <- mean(v)

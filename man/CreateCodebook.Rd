@@ -6,6 +6,13 @@
 \usage{
 CreateCodebook(df, df_file_name, df_title)
 }
+\arguments{
+\item{df}{dataframe object to create codebook}
+
+\item{df_file_name}{name codebook should be saved under}
+
+\item{df_title}{title printed on first page of codebook}
+}
 \description{
 Create a codebook for a dataset including XXX for all variables.
 }

@@ -7,17 +7,17 @@
 create_data_tab(df, index, margin, tab.max, fnc, ...)
 }
 \arguments{
+\item{df}{a tibble}
+
 \item{index}{variable name in x to apply the specified function}
 
 \item{margin}{variable name in x to stratify data in index}
 
 \item{tab.max}{for a given extract, largest number of unique stratiying values}
 
+\item{fnc}{the function to be applied}
+
 \item{...}{optional arguments to fun}
-
-\item{x}{a tibble}
-
-\item{fun}{the function to be applied}
 }
 \value{
 An array including results of function specified as fun, on variable

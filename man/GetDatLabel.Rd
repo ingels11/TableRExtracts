@@ -17,57 +17,57 @@
 \alias{AddVarDescrips<-}
 \alias{AddValLabel<-}
 \alias{AddValLabels<-}
-\alias{RemoveDatLabel<-}
-\alias{RemoveDatDescrip<-}
+\alias{RemoveDatLabel}
+\alias{RemoveDatDescrip}
 \alias{RemoveVarLabel<-}
 \alias{RemoveVarDescrip<-}
-\alias{RemoveVallabel<-}
+\alias{RemoveValLabel<-}
 \title{Add, remove, and get dataset, variable, and value value}
 \usage{
-GetDatLabel(x)
+GetDatLabel(df)
 
-GetDatDescrip(x)
+GetDatDescrip(df)
 
-GetVarLabel(x, index)
+GetVarLabel(df, index)
 
-GetVarLabels(x)
+GetVarLabels(df)
 
-GetVarDescrip(x, index)
+GetVarDescrip(df, index)
 
-GetValLabel(x, index, val)
+GetValLabel(df, index, val)
 
-GetValLabels(x, index)
+GetValLabels(df, index)
 
-GetLabel(x, index, val = NA)
+GetLabel(df, index, val = NA)
 
-AddDatLabel(x) <- value
+AddDatLabel(df) <- value
 
-AddDatDescrip(x) <- value
+AddDatDescrip(df) <- value
 
-AddVarLabel(x, index) <- value
+AddVarLabel(df, index) <- value
 
-AddVarLabels(x, stop.null = FALSE) <- value
+AddVarLabels(df, stop.null = FALSE) <- value
 
-AddVarDescrip(x, index) <- value
+AddVarDescrip(df, index) <- value
 
-AddVarDescrips(x) <- value
+AddVarDescrips(df) <- value
 
-AddValLabel(x, index) <- value
+AddValLabel(df, index) <- value
 
-AddValLabels(x) <- value
+AddValLabels(df) <- value
 
-RemoveDatLabel(x) <- value
+RemoveDatLabel(df)
 
-RemoveDatDescrip(x) <- value
+RemoveDatDescrip(df)
 
-RemoveVarLabel(x) <- value
+RemoveVarLabel(df) <- value
 
-RemoveVarDescrip(x) <- value
+RemoveVarDescrip(df) <- value
 
-RemoveVallabel(x) <- value
+RemoveValLabel(df) <- value
 }
 \arguments{
-\item{x}{a tibble}
+\item{df}{a tibble}
 
 \item{index}{either the name of a column/variable or index number}
 
@@ -75,11 +75,8 @@ RemoveVallabel(x) <- value
 
 \item{value}{variable value name as character vector}
 
-\item{value}{variable value names as vector of character vectors}
-
-\item{value}{value value as list}
-
-\item{labels_lst}{value value as list of lists}
+\item{stop.null}{optional argument that when true will stop function
+execution if a variable listed in value does not exist in df}
 }
 \value{
 No return for functions with Add or Remove
@@ -136,7 +133,7 @@ of the function.
 \strong{Variable labels:}
 
 Variable labels are set using AddVarLabel() and the arguments must include
-the dataset as a tibble (x), the name of the variable as a character or a
+the dataset as a tibble (df), the name of the variable as a character or a
 number that refers to its position in the dataset (index), and the value as
 a character vector (value). This label will be passed to extracts when
 the variable is included and is ideal for referencing the variable in a table.
@@ -163,11 +160,11 @@ AddVarLabels(college_grads) <- c("Total" = "Total number of people with major",
                                  "Women" = "Female graduates")
 
 ### Add value labels
-college_grads <- AddValLabel(college_grads, "Major_category2") <-
-      list(vals = c(1, 2, 3, 4, 5, 6),
-           labs = c("Business, Education, and Communication",
-                    "Education", "Health", "Natural Sciences",
-                    "Social Sciences and Art", "Other"))
+AddValLabel(college_grads, "Major_category2") <-
+       list(vals = c(1, 2, 3, 4, 5, 6),
+            labs = c("Business, Education, and Communication",
+                     "Education", "Health", "Natural Sciences",
+                     "Social Sciences and Art", "Other"))
 lst <- list("Major_category2" = list(vals = c(1, 2, 3, 4, 5, 6),
                                      labs = c("Business, Education, and Communication",
                                      "Education",
@@ -176,7 +173,7 @@ lst <- list("Major_category2" = list(vals = c(1, 2, 3, 4, 5, 6),
                                      "Social Sciences and Art",
                                      "Other")),
             "Major_category" = list(vals = seq.int(from = 1, to = 16, by = 1),
-                                    labs = "Agriculture & Natural Resources",
+                                    labs = c("Agriculture & Natural Resources",
                                            "Arts",
                                            "Biology & life Science",
                                            "Business",
@@ -191,9 +188,9 @@ lst <- list("Major_category2" = list(vals = c(1, 2, 3, 4, 5, 6),
                                            "Law & Public Policy",
                                            "Physical Sciences",
                                            "Psychology & Social Work",
-                                           "Social Science"))
+                                           "Social Science")))
 
-college_grads <- AddValLabels(college_grads) <- lst
+AddValLabels(college_grads) <- lst
 
 ### Return variable and value value
 ### Two ways to return, either by specifying Var or Val directly

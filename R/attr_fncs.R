@@ -6,13 +6,12 @@
 #' Creating these value is useful in the other functions in the TableRExtracts
 #' package.
 #'
-#' @param x a tibble
+#' @param df a tibble
 #' @param index either the name of a column/variable or index number
 #' @param value variable value name as character vector
-#' @param value variable value names as vector of character vectors
-#' @param value value value as list
-#' @param labels_lst value value as list of lists
 #' @param val specific value of a variable for which a value is to be returned
+#' @param stop.null optional argument that when true will stop function
+#'    execution if a variable listed in value does not exist in df
 #' @details
 #' Labels for elements of a datset are set using attributes
 #' (see \code{\link[base]{attributes}}). There are three main types of labels
@@ -57,7 +56,7 @@
 #' \strong{Variable labels:}
 #'
 #' Variable labels are set using AddVarLabel() and the arguments must include
-#' the dataset as a tibble (x), the name of the variable as a character or a
+#' the dataset as a tibble (df), the name of the variable as a character or a
 #' number that refers to its position in the dataset (index), and the value as
 #' a character vector (value). This label will be passed to extracts when
 #' the variable is included and is ideal for referencing the variable in a table.
@@ -88,11 +87,11 @@
 #'                                  "Women" = "Female graduates")
 #'
 #' ### Add value labels
-#' college_grads <- AddValLabel(college_grads, "Major_category2") <-
-#'       list(vals = c(1, 2, 3, 4, 5, 6),
-#'            labs = c("Business, Education, and Communication",
-#'                     "Education", "Health", "Natural Sciences",
-#'                     "Social Sciences and Art", "Other"))
+#' AddValLabel(college_grads, "Major_category2") <-
+#'        list(vals = c(1, 2, 3, 4, 5, 6),
+#'             labs = c("Business, Education, and Communication",
+#'                      "Education", "Health", "Natural Sciences",
+#'                      "Social Sciences and Art", "Other"))
 #' lst <- list("Major_category2" = list(vals = c(1, 2, 3, 4, 5, 6),
 #'                                      labs = c("Business, Education, and Communication",
 #'                                      "Education",
@@ -101,7 +100,7 @@
 #'                                      "Social Sciences and Art",
 #'                                      "Other")),
 #'             "Major_category" = list(vals = seq.int(from = 1, to = 16, by = 1),
-#'                                     labs = "Agriculture & Natural Resources",
+#'                                     labs = c("Agriculture & Natural Resources",
 #'                                            "Arts",
 #'                                            "Biology & life Science",
 #'                                            "Business",
@@ -116,9 +115,9 @@
 #'                                            "Law & Public Policy",
 #'                                            "Physical Sciences",
 #'                                            "Psychology & Social Work",
-#'                                            "Social Science"))
+#'                                            "Social Science")))
 #'
-#' college_grads <- AddValLabels(college_grads) <- lst
+#' AddValLabels(college_grads) <- lst
 #'
 #' ### Return variable and value value
 #' ### Two ways to return, either by specifying Var or Val directly
@@ -132,39 +131,39 @@
 #' RemoveVarLabel(college_grads) <- "Total"
 #' RemoveValLabel(college_grads) <- "Major_category2"
 #' @export
-GetDatLabel <- function(x) {
+GetDatLabel <- function(df) {
 
-  if (is.null(attr(x, "label"))) {
+  if (is.null(attr(df, "label"))) {
     return("")
   } else {
-    return(attr(x, "label"))
+    return(attr(df, "label"))
   }
 }
 
 #' @rdname GetDatLabel
 #' @export
-GetDatDescrip <- function(x) {
+GetDatDescrip <- function(df) {
 
-  if (is.null(attr(x, "shortDescription"))) {
+  if (is.null(attr(df, "shortDescription"))) {
     return("")
   } else {
-    return(attr(x, "shortDescription"))
+    return(attr(df, "shortDescription"))
   }
 }
 
 #' @rdname GetDatLabel
 #' @export
-GetVarLabel <- function(x, index) {
+GetVarLabel <- function(df, index) {
 
   if (is.character(index) | is.numeric(index)) {
     if (length(index) == 1) {
-      if (is.null(attr(x[[index]], "label"))) {
+      if (is.null(attr(df[[index]], "label"))) {
         return("")
       } else {
-        return(attr(x[[index]], "label"))
+        return(attr(df[[index]], "label"))
       }
     } else if (length(index) > 1) {
-      return(GetVarLabels(x[, index]))
+      return(GetVarLabels(df[, index]))
     } else {
       return("")
     }
@@ -175,12 +174,12 @@ GetVarLabel <- function(x, index) {
 
 #' @rdname GetDatLabel
 #' @export
-GetVarLabels <- function(x) {
+GetVarLabels <- function(df) {
 
   labs <- c()
-  for (i in 1:ncol(x)) {
-    if (!is.null(GetVarLabel(x, i))) {
-      labs <- c(labs, GetVarLabel(x, i))
+  for (i in 1:ncol(df)) {
+    if (!is.null(GetVarLabel(df, i))) {
+      labs <- c(labs, GetVarLabel(df, i))
     }
   }
   return(labs)
@@ -188,13 +187,13 @@ GetVarLabels <- function(x) {
 
 #' @rdname GetDatLabel
 #' @export
-GetVarDescrip <- function(x, index) {
+GetVarDescrip <- function(df, index) {
 
   if (is.character(index) | is.numeric(index)) {
-    if (is.null(attr(x[[index]], "shortDescription"))) {
+    if (is.null(attr(df[[index]], "shortDescription"))) {
       return("")
     } else {
-      return(attr(x[[index]], "shortDescription"))
+      return(attr(df[[index]], "shortDescription"))
     }
   } else {
     stop("In GetVarDescrip, index argument must be a character vector")
@@ -204,9 +203,9 @@ GetVarDescrip <- function(x, index) {
 
 #' @rdname GetDatLabel
 #' @export
-GetValLabel <- function(x, index, val) {
+GetValLabel <- function(df, index, val) {
 
-  tmp <- attr(x[[index]], "vallabel")
+  tmp <- attr(df[[index]], "vallabel")
   if (is.null(tmp$labs[tmp$vals == val])) {
     return("")
   } else {
@@ -216,18 +215,18 @@ GetValLabel <- function(x, index, val) {
 
 #' @rdname GetDatLabel
 #' @export
-GetValLabels <- function(x, index) {
+GetValLabels <- function(df, index) {
 
   if (length(index) == 1) {
-    if (is.null(attr(x[[index]], "vallabel"))) {
+    if (is.null(attr(df[[index]], "vallabel"))) {
       return("")
     } else {
-      return(attr(x[[index]], "vallabel"))
+      return(attr(df[[index]], "vallabel"))
     }
   } else if (length(index) > 1) {
     return_lst <- list()
     for (i in index) {
-      return_lst[[i]] <- attr(x[[i]], "vallabel")
+      return_lst[[i]] <- attr(df[[i]], "vallabel")
     }
     return(return_lst)
   }
@@ -235,103 +234,103 @@ GetValLabels <- function(x, index) {
 
 #' @rdname GetDatLabel
 #' @export
-GetLabel <- function(x, index, val = NA) {
+GetLabel <- function(df, index, val = NA) {
 
   if (is.na(val)) {
-    return(GetVarlabel(x, index))
+    return(GetVarLabel(df, index))
   } else {
-    return(GetVallabel(x, index, val))
+    return(GetValLabel(df, index, val))
   }
 }
 
 #' @rdname GetDatLabel
 #' @export
-`AddDatLabel<-` <- function(x, value) {
+`AddDatLabel<-` <- function(df, value) {
 
   if (!is.character(value)) {
     stop("In AddDatLabel, value argument must be a character vector")
   }
   value <- stringr::str_replace(value, ",", ";")
-  attr(x, "label") <- value
-  x
+  attr(df, "label") <- value
+  df
 }
 
 #' @rdname GetDatLabel
 #' @export
-`AddDatDescrip<-` <- function(x, value) {
+`AddDatDescrip<-` <- function(df, value) {
 
   if (!is.character(value)) {
     stop("In AddDatLabel, value argument must be a character vector")
   }
   value <- stringr::str_replace(value, ",", ";")
-  attr(x, "shortDescription") <- value
-  x
+  attr(df, "shortDescription") <- value
+  df
 }
 
 #' @rdname GetDatLabel
 #' @export
-`AddVarLabel<-` <- function(x, index, value) {
+`AddVarLabel<-` <- function(df, index, value) {
 
   if (!is.character(value)) {
     stop("In AddVarlabel, value argument must be a character vector")
   }
   value <- stringr::str_replace(value, ",", ";")
   if (is.character(index) | is.numeric(index)) {
-    attr(x[[index]], "label") <- value
+    attr(df[[index]], "label") <- value
   } else {
     stop("In AddVarlabel, index argument must be a character vector")
   }
-  x
+  df
 }
 
 #' @rdname GetDatLabel
 #' @export
-`AddVarLabels<-` <- function(x, stop.null = FALSE, value) {
+`AddVarLabels<-` <- function(df, stop.null = FALSE, value) {
 
   for (i in 1:length(value)) {
-    if (stop.null & is.null(x[[names(value)[i]]])) {
-      stop(paste(names(value)[i], " not a column/variable in object x"))
+    if (stop.null & is.null(df[[names(value)[i]]])) {
+      stop(paste(names(value)[i], " not a column/variable in object df"))
     } else {
-      if (!is.null(x[[names(value)[i]]])) {
-        AddVarLabel(x, names(value)[i]) <- value[i]
+      if (!is.null(df[[names(value)[i]]])) {
+        AddVarLabel(df, names(value)[i]) <- value[i]
       }
     }
   }
-  x
+  df
 }
 
 #' @rdname GetDatLabel
 #' @export
-`AddVarDescrip<-` <- function(x, index, value) {
+`AddVarDescrip<-` <- function(df, index, value) {
 
   if (!is.character(value)) {
     stop("In AddVarDescrip, value argument must be a character vector")
   }
   value <- stringr::str_replace(value, ",", ";")
   if (is.character(index) | is.numeric(index)) {
-    attr(x[[index]], "shortDescription") <- value
+    attr(df[[index]], "shortDescription") <- value
   } else {
     stop("In AddVarDescrip, index argument must be a character vector")
   }
-  x
+  df
 }
 
 #' @rdname GetDatLabel
 #' @export
-`AddVarDescrips<-` <- function(x, value) {
+`AddVarDescrips<-` <- function(df, value) {
 
   for (i in 1:length(value)) {
-    if (is.null(x[[names(value)[i]]])) {
-      stop(paste(names(value)[i], " not a column/variable in object x"))
+    if (is.null(df[[names(value)[i]]])) {
+      stop(paste(names(value)[i], " not a column/variable in object df"))
     }
-    AddVarDescrip(x, names(value)[i]) <- value[i]
+    AddVarDescrip(df, names(value)[i]) <- value[i]
   }
-  x
+  df
 }
 
 #' @rdname GetDatLabel
 #' @export
-`AddValLabel<-` <- function(x, index, value) {
+`AddValLabel<-` <- function(df, index, value) {
 
   if (!is.list(value)) {
     stop("In AddValLabel, value argument must be a list")
@@ -343,72 +342,72 @@ GetLabel <- function(x, index, val = NA) {
     value$labs[i] <- stringr::str_replace_all(value$labs[i], ",", ";")
   }
   if (is.character(index) | is.integer(index)) {
-    attr(x[[index]], "vallabel") <- value
+    attr(df[[index]], "vallabel") <- value
   } else {
     stop("In AddValLabel, index argument must be a character vector")
   }
-  x
+  df
 }
 
 #' @rdname GetDatLabel
 #' @export
-`AddValLabels<-` <- function(x, value) {
+`AddValLabels<-` <- function(df, value) {
   for (i in 1:length(value)) {
-    AddValLabel(x, names(value)[i]) <- value[[i]]
+    AddValLabel(df, names(value)[i]) <- value[[i]]
   }
-  x
+  df
 }
 
 #' @rdname GetDatLabel
 #' @export
-`RemoveDatLabel<-` <- function(x) {
+RemoveDatLabel <- function(df) {
 ### function does not work
-  attr(x, "label") <- NULL
-  x
+  attr(df, "label") <- NULL
+  return(df)
 }
 
 #' @rdname GetDatLabel
 #' @export
-`RemoveDatDescrip<-` <- function(x) {
+RemoveDatDescrip <- function(df) {
 ### function does not work
-  attr(x, "shortDescription") <- NULL
-  x
+  attr(df, "shortDescription") <- NULL
+  return(df)
 }
 
 #' @rdname GetDatLabel
 #' @export
-`RemoveVarLabel<-` <- function(x, value) {
+`RemoveVarLabel<-` <- function(df, value) {
 
   if (is.character(value) | is.numeric(value)) {
-    attr(x[[value]], "label") <- NULL
+    attr(df[[value]], "label") <- NULL
   } else {
     stop("In RemoveVarlabel, value argument must be a character vector")
   }
-  x
+  df
 }
 
 #' @rdname GetDatLabel
 #' @export
-`RemoveVarDescrip<-` <- function(x, value) {
+`RemoveVarDescrip<-` <- function(df, value) {
 
   if (is.character(value) | is.numeric(value)) {
-    attr(x[[value]], "shortDescription") <- NULL
+    attr(df[[value]], "shortDescription") <- NULL
   } else {
     stop("In RemoveVarDescrip, value argument must be a character vector")
   }
-  x
+  df
 }
 
 #' @rdname GetDatLabel
 #' @export
-`RemoveVallabel<-` <- function(x, value) {
+`RemoveValLabel<-` <- function(df, value) {
 
   if (is.character(value) | is.numeric(value)) {
-    attr(x[[value]], "vallabel") <- NULL
+    attr(df[[value]], "vallabel") <- NULL
   } else {
     stop("In RemoveVallabel, value argument must be a character vector")
   }
-  x
+  df
 }
 
 CombineAllLabels <- function(df) {

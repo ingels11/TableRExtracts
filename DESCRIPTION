@@ -1,11 +1,11 @@
 Package: TableRExtracts
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Table Extracts and Data Labeling
 Version: 0.1.0.9000
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Justin Ingels
+Maintainer: Justin Ingels <ingels@uga.edu>
+Description: A suite of tools for labeling datasets and creating data codebooks
+    and table extracts.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -18,5 +18,8 @@ Imports: tibble,
     dplyr,
     purrr,
     dataMaid,
-    stringr
+    stringr,
+    stats,
+    magrittr
+Depends: R (>= 2.10)
 VignetteBuilder: knitr

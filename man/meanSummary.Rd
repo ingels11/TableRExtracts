@@ -2,7 +2,7 @@
 % Please edit documentation in R/mean_summary.R
 \name{meanSummary}
 \alias{meanSummary}
-\title{Create codebooks for datasets marked up by the TableRExtracts package}
+\title{Functions used to add a mean value to codebooks}
 \usage{
 meanSummary(v, maxDecimals = 2)
 }
@@ -12,5 +12,6 @@ meanSummary(v, maxDecimals = 2)
 \item{maxDecimals}{Maximum number of decimals to display (default = 2)}
 }
 \description{
-A set of functions that will help to create codebooks...
+A set of functions that will help to add the line of mean value
+to codebooks.
 }

@@ -92,7 +92,7 @@ CreateExtractFreq <- function(x, vars, tab_vars, notes, outputfile, info,
       var_lst$tab_var_num <- length(unique(x[[tab_var]]))
 
       if (run_test & (var_lst$var_num > 1) & (var_lst$tab_var_num > 1)) {
-        result <- chisq.test(table(dplyr::pull(x, var),
+        result <- stats::chisq.test(table(dplyr::pull(x, var),
                                    dplyr::pull(x, tab_var)))
         result$statsig <- getsig(result$p.value)
       } else {
@@ -122,6 +122,25 @@ CreateExtractFreq <- function(x, vars, tab_vars, notes, outputfile, info,
 
 }
 
+#' Create a Table Extract
+#'
+#' A set of functions to create different types of table extracts. These extracts
+#' are written to a comma-separated value (.csv) file.
+#'
+#' @param x a tibble
+#' @param vars a character vector include one or more variable name in x
+#' @param tab_vars a character vector including one or more variable name
+#' @param notes a character string including notes to include in the extract
+#' @param outputfile a character string for which to write the extract
+#' @param info hmm
+#' @param stats statistical summaries to be included in the extract
+#' @param test (optional) the name of a statistical test to be conducted hwen
+#' run_test is set to TRUE, if left as NA the default test will be used
+#' @param run_test (optional) should an appropriate statistical test be conducted
+#'
+#' @details
+#' There are several different types of table extracts that can be created
+#'
 #' @export
 CreateExtractMean <- function(x, vars, tab_vars, notes, outputfile, info,
                               stats = c(mean, median, min, max),
@@ -200,7 +219,8 @@ CreateExtractMean <- function(x, vars, tab_vars, notes, outputfile, info,
 
       if (run_test & (var_lst$tab_var_num > 1)) {
         var_lst$result <-
-          oneway.test(as.formula(paste(var, tab_var, sep = " ~ ")), data = x)
+          stats::oneway.test(stats::as.formula(paste(var, tab_var, sep = " ~ ")),
+                             data = x)
         var_lst$result$statsig <- getsig(var_lst$result$p.value)
       } else {
         var_lst$result <- NA

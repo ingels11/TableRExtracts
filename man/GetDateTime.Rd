@@ -12,6 +12,3 @@ The current date and time
 \description{
 Create a properly formatted date and time string
 }
-\examples{
-GetDateTime()
-}
